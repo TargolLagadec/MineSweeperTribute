@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane stylesheets="@../../style/style.css" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.targol.mine.ui.panels.WelcomePanelController">
+	<center>
+		<VBox alignment="CENTER" styleClass="content">
+			<Label alignment="CENTER" contentDisplay="CENTER" minHeight="150.0" styleClass="heading" text="%MainWindow.label.NoneOpened" textAlignment="CENTER" wrapText="true">
+				<font>
+					<Font size="24.0" />
+				</font>
+			</Label>
+		</VBox>
+	</center>
+	<bottom>
+	</bottom>
+</BorderPane>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import org.targol.mine.ui.components.LocalizedEnumSelector?>
+
+<DialogPane maxHeight="400" prefWidth="500" stylesheets="@../../style/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+
+	<content>
+		<GridPane hgap="5" vgap="5">
+			<Label text="%GameType.title" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+			<LocalizedEnumSelector fx:id="gameType" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+			<Label text="%Difficulty.title" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+			<LocalizedEnumSelector fx:id="difficulty" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+			
+			<Label text="%NewGameDialog.nbRows" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+			<Slider fx:id="nbRows" blockIncrement="5.0" min="20.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+			
+			<Label text="%NewGameDialog.nbCols" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+			<Slider fx:id="nbCols" blockIncrement="5.0" min="20.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+			
+			<columnConstraints>
+				<ColumnConstraints />
+				<ColumnConstraints hgrow="ALWAYS" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints />
+				<RowConstraints />
+				<RowConstraints />
+				<RowConstraints />
+			</rowConstraints>
+		</GridPane>
+	</content>
+
+	<buttonTypes>
+		<ButtonType fx:id="okButtonType" buttonData="OK_DONE" text="%Generic.dialog.Ok" />
+		<ButtonType buttonData="CANCEL_CLOSE" text="%Generic.dialog.Cancel" />
+	</buttonTypes>
+
+</DialogPane>
