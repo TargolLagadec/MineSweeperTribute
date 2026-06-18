@@ -1,19 +1,21 @@
 package org.targol.mine.game;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
 import org.targol.mine.game.enums.Difficulty;
 
-public abstract class AbstractMineField implements IMineField {
+public abstract class AbstractMineField {
 
 	protected final Cell[][] cells;
 	protected final int rowCount;
 	protected final int colCount;
 	protected final int nbMines;
 	protected boolean gameLost = false;
+	private List<Cell> revealedCells = new ArrayList<>();
 
 	public AbstractMineField(final int nbRows, final int nbCols, final Difficulty difficulty) {
 		this.rowCount = nbRows;
@@ -58,19 +60,23 @@ public abstract class AbstractMineField implements IMineField {
 		}
 	}
 
-	@Override
 	public void reveal(final int startRow, final int startColumn) {
+		this.revealedCells = new ArrayList<>();
 		final Queue<Cell> queue = new ArrayDeque<>();
 		queue.add(this.cells[startRow][startColumn]);
 
 		while (!queue.isEmpty()) {
 			final Cell cell = queue.remove();
+			this.revealedCells.add(cell);
 			final int row = cell.getRow();
 			final int column = cell.getCol();
 			if (cell.isFlagged()) {
 				continue;
 			}
 			if (cell.isRevealed()) {
+				if (cell.getAdjacentMineCount() != 0) {
+					queue.addAll(getAllAdjacentUnrevealedAndUnFlagedCells(row, column));
+				}
 				continue;
 			}
 			if (!cell.isFlagged()) {
@@ -80,7 +86,7 @@ public abstract class AbstractMineField implements IMineField {
 					break;
 				}
 			}
-			if (cell.getAdjacentMineCount() != 0 && !areAllAdjacentMinesFlagged(cell.getRow(), cell.getCol())) {
+			if (cell.getAdjacentMineCount() > 0) {
 				continue;
 			}
 			for (final Cell neighbour : getAdjacentCells(row, column)) {
@@ -89,42 +95,66 @@ public abstract class AbstractMineField implements IMineField {
 		}
 	}
 
-	private boolean areAllAdjacentMinesFlagged(final int row, final int col) {
+	/**
+	 * This method will return the list of all unrevealed and unflagged cells
+	 * surrounding a revealed cell with number already surrounded with the correct
+	 * ammont of flags.
+	 *
+	 * @param row row of the numbered Cell to check
+	 * @param col col of the numbered Cell to check
+	 * @return the list of all unrevealed and unflagged cells surrounding a revealed
+	 *         cell with number already surrounded with the correct ammont of
+	 *         flags.<br>
+	 *         This list is empty if no unrevealed cells are present around this
+	 *         cell or the number of flags that surrounds it is not equal to its
+	 *         number.
+	 */
+	private List<Cell> getAllAdjacentUnrevealedAndUnFlagedCells(final int row, final int col) {
+		final List<Cell> ret = new ArrayList<>();
+		final int expectedFlags = this.cells[row][col].getAdjacentMineCount();
 		int adjacentFlagsCount = 0;
 		for (final Cell neighbour : getAdjacentCells(row, col)) {
+			if (!neighbour.isRevealed()) {
+				ret.add(neighbour);
+			}
 			if (neighbour.isFlagged()) {
 				adjacentFlagsCount++;
 			}
 		}
-		return adjacentFlagsCount == this.cells[row][col].getAdjacentMineCount();
+		if (expectedFlags != adjacentFlagsCount) {
+			ret.clear();
+		}
+		return ret;
 	}
 
-	@Override
+	public List<Cell> getRevealedCells() {
+		return this.revealedCells;
+	}
+
+	public void setRevealedCells(final List<Cell> revealedCells) {
+		this.revealedCells = revealedCells;
+	}
+
 	public boolean isGameLost() {
 		return this.gameLost;
 	}
 
-	@Override
 	public Cell[][] getCells() {
 		return this.cells;
 	}
 
-	@Override
 	public Cell getCell(final int row, final int col) {
 		return this.cells[row][col];
 	}
 
-	@Override
 	public int getRowCount() {
 		return this.rowCount;
 	}
 
-	@Override
 	public int getColumnCount() {
 		return this.colCount;
 	}
 
-	@Override
 	public int getNbMines() {
 		return this.nbMines;
 	}

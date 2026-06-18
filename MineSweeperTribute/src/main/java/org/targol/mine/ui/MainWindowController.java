@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.springframework.stereotype.Controller;
-import org.targol.mine.game.IMineField;
+import org.targol.mine.game.AbstractMineField;
 import org.targol.mine.game.IMineFieldListener;
 import org.targol.mine.game.SquareMineField;
 import org.targol.mine.i18n.Messages;
@@ -108,7 +108,7 @@ public class MainWindowController implements IMineFieldListener {
 		Platform.exit();
 	}
 
-	private void displayMineField(final IMineField field) {
+	private void displayMineField(final AbstractMineField field) {
 		if (field instanceof SquareMineField) {
 			this.isSquare = true;
 		} else {

@@ -1,14 +1,14 @@
 package org.targol.mine.ui.panels;
 
+import org.targol.mine.game.AbstractMineField;
 import org.targol.mine.game.Cell;
-import org.targol.mine.game.IMineField;
 import org.targol.mine.game.IMineFieldListener;
 import org.targol.mine.ui.components.AbstractCellView;
 import org.targol.mine.ui.components.HexCellView;
 
 public class HexMineFieldPanel extends AbstractMineFieldPanel {
 
-	public HexMineFieldPanel(final IMineField field, final IMineFieldListener listener) {
+	public HexMineFieldPanel(final AbstractMineField field, final IMineFieldListener listener) {
 		super(field, listener);
 	}
 

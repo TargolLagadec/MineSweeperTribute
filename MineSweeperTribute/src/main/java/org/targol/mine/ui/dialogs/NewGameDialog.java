@@ -5,8 +5,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import org.targol.mine.game.AbstractMineField;
 import org.targol.mine.game.HexMineField;
-import org.targol.mine.game.IMineField;
 import org.targol.mine.game.SquareMineField;
 import org.targol.mine.game.enums.Difficulty;
 import org.targol.mine.game.enums.GameType;
@@ -29,7 +29,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 
-public class NewGameDialog extends Dialog<IMineField> {
+public class NewGameDialog extends Dialog<AbstractMineField> {
 
 	@FXML
 	private LocalizedEnumSelector<GameType> gameType;

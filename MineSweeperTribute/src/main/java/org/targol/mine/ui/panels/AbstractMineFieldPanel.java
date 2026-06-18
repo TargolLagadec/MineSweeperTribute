@@ -1,7 +1,7 @@
 package org.targol.mine.ui.panels;
 
+import org.targol.mine.game.AbstractMineField;
 import org.targol.mine.game.Cell;
-import org.targol.mine.game.IMineField;
 import org.targol.mine.game.IMineFieldListener;
 import org.targol.mine.ui.components.AbstractCellView;
 
@@ -14,13 +14,13 @@ import javafx.scene.layout.Pane;
 public abstract class AbstractMineFieldPanel extends Pane {
 
 	protected final IMineFieldListener listener;
-	protected final IMineField field;
+	protected final AbstractMineField field;
 	protected final AbstractCellView[][] cellViews;
 	protected final IntegerProperty mineCount = new SimpleIntegerProperty();
 	protected boolean gameStarted = false;
 	protected boolean gameEnded = false;
 
-	public AbstractMineFieldPanel(final IMineField field, final IMineFieldListener listener) {
+	public AbstractMineFieldPanel(final AbstractMineField field, final IMineFieldListener listener) {
 		super();
 		this.field = field;
 		this.listener = listener;
@@ -50,7 +50,7 @@ public abstract class AbstractMineFieldPanel extends Pane {
 		}
 		if (event.getButton() == MouseButton.PRIMARY) {
 			this.field.reveal(row, column);
-			refreshAll();
+			refreshAllRevealedCells();
 			if (this.field.isGameLost()) {
 				this.gameEnded = true;
 				this.listener.gameLost();
@@ -76,13 +76,9 @@ public abstract class AbstractMineFieldPanel extends Pane {
 		}
 	}
 
-	private void refreshAll() {
-		// TODO Optimiser en mémorisant au niveau de l'AbstractMineField les cellules
-		// modifiées
-		for (int r = 0; r < this.field.getRowCount(); r++) {
-			for (int c = 0; c < this.field.getColumnCount(); c++) {
-				this.cellViews[r][c].refresh();
-			}
+	private void refreshAllRevealedCells() {
+		for (final Cell cell : this.field.getRevealedCells()) {
+			this.cellViews[cell.getRow()][cell.getCol()].refresh();
 		}
 	}
 }
