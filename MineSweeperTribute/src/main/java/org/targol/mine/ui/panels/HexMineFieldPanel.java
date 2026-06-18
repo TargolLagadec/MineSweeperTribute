@@ -20,6 +20,7 @@ public class HexMineFieldPanel extends Pane {
 	private final HexCellView[][] cellViews;
 	private final IntegerProperty mineCount = new SimpleIntegerProperty();
 	private boolean gameStarted = false;
+	private boolean gameEnded = false;
 
 	public HexMineFieldPanel(final IMineField field, final IMineFieldListener listener) {
 		super();
@@ -36,9 +37,9 @@ public class HexMineFieldPanel extends Pane {
 					onCellClicked(cellView.getRow(), cellView.getColumn(), event);
 				});
 				if (r == 0 || r % 2 == 0) {
-					cellView.relocate(30 * c, r * 10);
+					cellView.relocate(15 + 30 * c, r * 10);
 				} else {
-					cellView.relocate(30 * c + 15, r * 10);
+					cellView.relocate(30 * c + 30, r * 10);
 				}
 				getChildren().add(cellView);
 			}
@@ -50,24 +51,34 @@ public class HexMineFieldPanel extends Pane {
 			this.gameStarted = true;
 			this.listener.gameStarted();
 		}
+		if (this.gameEnded) {
+			return;
+		}
 		if (event.getButton() == MouseButton.PRIMARY) {
 			this.field.reveal(row, column);
 			for (final Node node : getChildren()) {
 				((HexCellView) node).refresh();
 			}
 			if (this.field.isGameLost()) {
+				this.gameEnded = true;
 				this.listener.gameLost();
 			}
 		} else if (event.getButton() == MouseButton.SECONDARY) {
 			final Cell cell = this.field.getCell(row, column);
 			if (cell.isFlagged()) {
+				// removing flag
 				cell.setFlagged(false);
 				this.mineCount.set(this.mineCount.get() + 1);
 				this.listener.mineCounterChanged(this.mineCount.get());
 			} else {
+				// adding flag
 				cell.setFlagged(true);
-				this.mineCount.set(this.mineCount.get() - 1);
-				this.listener.mineCounterChanged(this.mineCount.get());
+				int nbRemaining = this.mineCount.get() - 1;
+				if (nbRemaining == 0) {
+					this.gameEnded = true;
+				}
+				this.mineCount.set(nbRemaining);
+				this.listener.mineCounterChanged(nbRemaining);
 			}
 			this.cellViews[row][column].refresh();
 		}

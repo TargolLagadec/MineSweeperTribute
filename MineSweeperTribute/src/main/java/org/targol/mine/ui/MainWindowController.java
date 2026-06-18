@@ -111,7 +111,7 @@ public class MainWindowController implements IMineFieldListener {
 					field.getRowCount() * CellView.CELL_HEIGHT_AND_WIDTH + this.maxSquareMineFieldSize.headerHeight());
 			boardPane = new SquareMineFieldPanel(field, this);
 		} else {
-			win.setWidth(field.getColumnCount() * HexCellView.CELL_HEIGHT_AND_WIDTH);
+			win.setWidth(field.getColumnCount() * HexCellView.CELL_HEIGHT_AND_WIDTH * 1.5);
 			win.setHeight(field.getRowCount() * HexCellView.CELL_HEIGHT_AND_WIDTH / 2
 					+ HexCellView.CELL_HEIGHT_AND_WIDTH + this.maxHexMineFieldSize.headerHeight());
 			boardPane = new HexMineFieldPanel(field, this);

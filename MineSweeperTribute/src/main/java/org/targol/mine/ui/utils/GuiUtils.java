@@ -35,8 +35,9 @@ public class GuiUtils {
 		final double windowHeignt = contentPane.getScene().getWindow().getHeight();
 		final double windowHeaderHeight = windowHeignt - contentBounds.getHeight();
 		final Rectangle2D screenSize = getCurrentScreenBounds(contentPane.getScene());
-		return new ScreenLimits((int) screenSize.getHeight() / HexCellView.CELL_HEIGHT_AND_WIDTH / 2,
-				(int) screenSize.getWidth() / HexCellView.CELL_HEIGHT_AND_WIDTH  - HexCellView.CELL_HEIGHT_AND_WIDTH, (int) windowHeaderHeight);
+		return new ScreenLimits(
+				(int) screenSize.getHeight() / HexCellView.CELL_HEIGHT_AND_WIDTH + HexCellView.CELL_HEIGHT_AND_WIDTH,
+				(int) (screenSize.getWidth() / (HexCellView.CELL_HEIGHT_AND_WIDTH * 1.75)), (int) windowHeaderHeight);
 	}
 
 	public static Rectangle2D getCurrentScreenBounds(final Scene scene) {
