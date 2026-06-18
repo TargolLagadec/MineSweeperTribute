@@ -6,28 +6,29 @@ import org.targol.mine.game.enums.CellDisplayState;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
-public class CellView extends StackPane {
+public abstract class AbstractCellView extends StackPane {
 
-	public static final int CELL_HEIGHT_AND_WIDTH = 20;
 	private final Cell cell;
 	private final int row;
 	private final int column;
-	private String currentCssClass;
 	private final Label label = new Label();
+	private CellDisplayState previousDisplay;
 
-	public CellView(final Cell cell, final int row, final int column) {
+	public AbstractCellView(final Cell cell, final int row, final int column) {
 		super();
-		getChildren().add(this.label);
 		this.cell = cell;
 		this.row = row;
 		this.column = column;
+		getChildren().add(this.label);
 		this.label.getStyleClass().clear();
-		this.label.getStyleClass().add("cell-label");
-		updateStyle(CellDisplayState.HIDDEN);
-		setMinSize(CELL_HEIGHT_AND_WIDTH, CELL_HEIGHT_AND_WIDTH);
-		setPrefSize(CELL_HEIGHT_AND_WIDTH, CELL_HEIGHT_AND_WIDTH);
-		setMaxSize(CELL_HEIGHT_AND_WIDTH, CELL_HEIGHT_AND_WIDTH);
+		this.label.getStyleClass().add("cell-label"); //$NON-NLS-1$
+		final double dim = getCellDim();
+		setMinSize(dim, dim);
+		setPrefSize(dim, dim);
+		setMaxSize(dim, dim);
 	}
+
+	protected abstract double getCellDim();
 
 	public void refresh() {
 		if (!this.cell.isRevealed()) {
@@ -60,11 +61,15 @@ public class CellView extends StackPane {
 	}
 
 	private void updateStyle(final CellDisplayState state) {
-		if (this.currentCssClass != null) {
-			getStyleClass().remove(this.currentCssClass);
+		if (state.equals(this.previousDisplay)) {
+			return;
 		}
-		this.currentCssClass = state.getCssClass();
-		getStyleClass().add(this.currentCssClass);
+		if (this.previousDisplay != null) {
+			getStyleClass().remove(this.previousDisplay.getCssClass());
+		}
+		getStyleClass().add(state.getCssClass());
 		this.label.setText(state.getLabel());
+
+		this.previousDisplay = state;
 	}
 }
