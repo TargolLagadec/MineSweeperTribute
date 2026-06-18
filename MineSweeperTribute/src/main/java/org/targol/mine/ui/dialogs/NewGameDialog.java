@@ -59,9 +59,6 @@ public class NewGameDialog extends Dialog<IMineField> {
 			setTitle(Messages.getString("Game.new")); //$NON-NLS-1$
 			final DialogPane dialogPane = loader.load();
 			this.gameType.setEnumClass(GameType.class);
-			this.gameType.selectedValueProperty().addListener((observable, oldValue, newValue) -> {
-				setMaxDimensions();
-			});
 			this.difficulty.setEnumClass(Difficulty.class);
 			final PreferencesManager pref = PreferencesManager.getInstance();
 			this.gameType.setSelectedValue(pref.getLastChoosenGameType());
