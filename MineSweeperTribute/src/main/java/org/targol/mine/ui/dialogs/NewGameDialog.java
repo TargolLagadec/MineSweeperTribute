@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 
 import org.targol.mine.game.HexMineField;
 import org.targol.mine.game.IMineField;
-import org.targol.mine.game.ScreenLimits;
 import org.targol.mine.game.SquareMineField;
 import org.targol.mine.game.enums.Difficulty;
 import org.targol.mine.game.enums.GameType;
@@ -45,14 +44,10 @@ public class NewGameDialog extends Dialog<IMineField> {
 	@FXML
 	private ButtonType okButtonType;
 	final Window owner;
-	final ScreenLimits maxSquare;
-	final ScreenLimits maxHex;
 	private final ResourceBundle bundle = ResourceBundle.getBundle("i18n.messages", Locale.getDefault()); //$NON-NLS-1$
 
-	public NewGameDialog(final Window owner, final ScreenLimits maxSquare, final ScreenLimits maxHex) {
+	public NewGameDialog(final Window owner) {
 		this.owner = owner;
-		this.maxSquare = maxSquare;
-		this.maxHex = maxHex;
 		try {
 
 			final FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/dialogs/NewGameDialog.fxml"), //$NON-NLS-1$
@@ -81,10 +76,9 @@ public class NewGameDialog extends Dialog<IMineField> {
 				if (GameType.SQUARE.equals(this.gameType.getSelectedValue())) {
 					return new SquareMineField((int) this.nbRows.getValue(), (int) this.nbCols.getValue(),
 							this.difficulty.getSelectedValue());
-				} else {
-					return new HexMineField((int) this.nbRows.getValue(), (int) this.nbCols.getValue(),
-							this.difficulty.getSelectedValue());
 				}
+				return new HexMineField((int) this.nbRows.getValue(), (int) this.nbCols.getValue(),
+						this.difficulty.getSelectedValue());
 			});
 			setOnShowing(dialogEvent -> Platform.runLater(() -> this.gameType.requestFocus()));
 			setMaxDimensions();
@@ -94,9 +88,8 @@ public class NewGameDialog extends Dialog<IMineField> {
 	}
 
 	private void setMaxDimensions() {
-		ScreenLimits limits = getLimitsDependingOnCellType(this.gameType.getSelectedValue());
 		final PreferencesManager pref = PreferencesManager.getInstance();
-		this.nbCols.setMax(limits.column());
+		this.nbCols.setMax(200);
 		this.nbCols.setMajorTickUnit(10);
 		this.nbCols.setShowTickMarks(true);
 		this.nbCols.setShowTickLabels(true);
@@ -104,7 +97,7 @@ public class NewGameDialog extends Dialog<IMineField> {
 		if (lastChoosenCols >= this.nbCols.getMin() && lastChoosenCols <= this.nbCols.getMax()) {
 			this.nbCols.setValue(lastChoosenCols);
 		}
-		this.nbRows.setMax(limits.row());
+		this.nbRows.setMax(100);
 		this.nbRows.setMajorTickUnit(10);
 		this.nbRows.setShowTickMarks(true);
 		this.nbRows.setShowTickLabels(true);
@@ -131,12 +124,5 @@ public class NewGameDialog extends Dialog<IMineField> {
 		pref.setIntPreference(PreferencesManager.PREF_LAST_ROWNUM, (int) this.nbRows.getValue());
 		pref.setLastChoosenDifficulty(this.difficulty.getSelectedValue());
 		pref.setLastChoosenGameType(this.gameType.getSelectedValue());
-	}
-
-	private ScreenLimits getLimitsDependingOnCellType(GameType type) {
-		if (GameType.HEX.equals(type)) {
-			return this.maxHex;
-		}
-		return this.maxSquare;
 	}
 }

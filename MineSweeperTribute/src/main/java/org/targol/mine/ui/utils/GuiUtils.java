@@ -2,56 +2,16 @@ package org.targol.mine.ui.utils;
 
 import java.util.Optional;
 
-import org.targol.mine.game.ScreenLimits;
 import org.targol.mine.i18n.Messages;
-import org.targol.mine.ui.components.CellView;
-import org.targol.mine.ui.components.HexCellView;
 import org.targol.mine.utils.ThemesManager;
 
-import javafx.geometry.Bounds;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
-import javafx.stage.Screen;
 
 public class GuiUtils {
-
-	public static ScreenLimits getMaxSquaresMineFieldRowsAndColForScreen(final Pane contentPane) {
-		final Bounds contentBounds = contentPane.getBoundsInParent();
-		final double windowHeignt = contentPane.getScene().getWindow().getHeight();
-		final double windowHeaderHeight = windowHeignt - contentBounds.getHeight();
-		final Rectangle2D screenSize = getCurrentScreenBounds(contentPane.getScene());
-		return new ScreenLimits((int) screenSize.getHeight() / CellView.CELL_HEIGHT_AND_WIDTH,
-				(int) screenSize.getWidth() / CellView.CELL_HEIGHT_AND_WIDTH, (int) windowHeaderHeight);
-	}
-
-	public static ScreenLimits getMaxHexMineFieldRowsAndColForScreen(final Pane contentPane) {
-		final Bounds contentBounds = contentPane.getBoundsInParent();
-		final double windowHeignt = contentPane.getScene().getWindow().getHeight();
-		final double windowHeaderHeight = windowHeignt - contentBounds.getHeight();
-		final Rectangle2D screenSize = getCurrentScreenBounds(contentPane.getScene());
-		return new ScreenLimits(
-				(int) screenSize.getHeight() / HexCellView.CELL_HEIGHT_AND_WIDTH + HexCellView.CELL_HEIGHT_AND_WIDTH,
-				(int) (screenSize.getWidth() / (HexCellView.CELL_HEIGHT_AND_WIDTH * 1.75)), (int) windowHeaderHeight);
-	}
-
-	public static Rectangle2D getCurrentScreenBounds(final Scene scene) {
-		final Rectangle2D windowBounds = new Rectangle2D(scene.getX(), scene.getY(), scene.getWidth(),
-				scene.getHeight());
-		for (final Screen screen : Screen.getScreens()) {
-			final Rectangle2D screenBounds = screen.getBounds();
-
-			if (screenBounds.intersects(windowBounds)) {
-				return screenBounds;
-			}
-		}
-		return Screen.getPrimary().getVisualBounds();
-	}
 
 	public static Image createImageViewFromInternalPng(final String imageInternalPath) {
 		return new Image(GuiUtils.class.getResourceAsStream(imageInternalPath));
@@ -75,9 +35,11 @@ public class GuiUtils {
 	 * @param title        dialog title
 	 * @param msg          dialog content text
 	 * @param initialValue initial content of input. can be <code>null</code>
-	 * @param regExp       if no <code>null</code>, limits allowed chars in input TextField.<br>
-	 *                     for example, if set to "<code>[A-Z0-9_]*</code>", it will limit input to Upper case letters,
-	 *                     numeral digits ans underscore char ("_").
+	 * @param regExp       if no <code>null</code>, limits allowed chars in input
+	 *                     TextField.<br>
+	 *                     for example, if set to "<code>[A-Z0-9_]*</code>", it will
+	 *                     limit input to Upper case letters, numeral digits ans
+	 *                     underscore char ("_").
 	 * @return an optional that content entered text if any.
 	 */
 	public static Optional<String> getTextFromInputDialog(final String title, final String msg,

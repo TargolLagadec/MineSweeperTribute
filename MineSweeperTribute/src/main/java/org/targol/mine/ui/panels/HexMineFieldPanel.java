@@ -73,7 +73,7 @@ public class HexMineFieldPanel extends Pane {
 			} else {
 				// adding flag
 				cell.setFlagged(true);
-				int nbRemaining = this.mineCount.get() - 1;
+				final int nbRemaining = this.mineCount.get() - 1;
 				if (nbRemaining == 0) {
 					this.gameEnded = true;
 				}

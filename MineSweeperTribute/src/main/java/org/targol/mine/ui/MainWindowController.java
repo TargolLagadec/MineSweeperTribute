@@ -7,11 +7,8 @@ import java.util.ResourceBundle;
 import org.springframework.stereotype.Controller;
 import org.targol.mine.game.IMineField;
 import org.targol.mine.game.IMineFieldListener;
-import org.targol.mine.game.ScreenLimits;
 import org.targol.mine.game.SquareMineField;
 import org.targol.mine.i18n.Messages;
-import org.targol.mine.ui.components.CellView;
-import org.targol.mine.ui.components.HexCellView;
 import org.targol.mine.ui.dialogs.GameResultDialog;
 import org.targol.mine.ui.dialogs.NewGameDialog;
 import org.targol.mine.ui.dialogs.PreferencesDialog;
@@ -19,7 +16,6 @@ import org.targol.mine.ui.panels.HexMineFieldPanel;
 import org.targol.mine.ui.panels.SquareMineFieldPanel;
 import org.targol.mine.ui.panels.TestPanel;
 import org.targol.mine.ui.panels.WelcomePanelController;
-import org.targol.mine.ui.utils.GuiUtils;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -29,12 +25,14 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Window;
 import javafx.util.Duration;
 
 @Controller
@@ -42,6 +40,10 @@ public class MainWindowController implements IMineFieldListener {
 
 	@FXML
 	private MenuItem mnuClose;
+	@FXML
+	private ScrollPane scrollPane;
+	@FXML
+	private Group group;
 	@FXML
 	private StackPane contentPane;
 	@FXML
@@ -53,10 +55,9 @@ public class MainWindowController implements IMineFieldListener {
 	private final IntegerProperty nbSeconds = new SimpleIntegerProperty();
 	private Timeline timer;
 
-	private ScreenLimits maxSquareMineFieldSize;
-	private ScreenLimits maxHexMineFieldSize;
 	private boolean isSquare;
 	private final ResourceBundle bundle = ResourceBundle.getBundle("i18n.messages", Locale.getDefault()); //$NON-NLS-1$
+	private static final double SCALE_FACTOR = 0.1;
 
 	public MainWindowController() {
 	}
@@ -65,14 +66,30 @@ public class MainWindowController implements IMineFieldListener {
 	private void initialize() {
 		loadWelcomeView();
 		// loadTestView();
+		this.scrollPane.setOnScroll(event -> {
+			if (!event.isControlDown()) {
+				return;
+			}
+			final double zoomFactor = event.getDeltaY() > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
+			final Bounds viewportBounds = this.scrollPane.getViewportBounds();
+			final Bounds contentBounds = this.contentPane.getBoundsInParent();
+			final double valX = this.scrollPane.getHvalue();
+			final double valY = this.scrollPane.getVvalue();
+			final double posX = valX * (contentBounds.getWidth() - viewportBounds.getWidth());
+			final double posY = valY * (contentBounds.getHeight() - viewportBounds.getHeight());
+			this.contentPane.setScaleX(this.contentPane.getScaleX() * zoomFactor);
+			this.contentPane.setScaleY(this.contentPane.getScaleY() * zoomFactor);
+			this.scrollPane.layout();
+			final Bounds newBounds = this.contentPane.getBoundsInParent();
+			this.scrollPane.setHvalue(posX / (newBounds.getWidth() - viewportBounds.getWidth()));
+			this.scrollPane.setVvalue(posY / (newBounds.getHeight() - viewportBounds.getHeight()));
+			event.consume();
+		});
 	}
 
 	@FXML
 	private void newGame() {
-		this.maxSquareMineFieldSize = GuiUtils.getMaxSquaresMineFieldRowsAndColForScreen(this.contentPane);
-		this.maxHexMineFieldSize = GuiUtils.getMaxHexMineFieldRowsAndColForScreen(this.contentPane);
-		final NewGameDialog dialog = new NewGameDialog(this.contentPane.getScene().getWindow(),
-				this.maxSquareMineFieldSize, this.maxHexMineFieldSize);
+		final NewGameDialog dialog = new NewGameDialog(this.contentPane.getScene().getWindow());
 		dialog.showAndWait().ifPresent(mineField -> {
 //			System.out.println(mineField);
 			displayMineField(mineField);
@@ -104,19 +121,11 @@ public class MainWindowController implements IMineFieldListener {
 		mineCounterChanged(field.getNbMines());
 
 		Pane boardPane;
-		final Window win = this.contentPane.getScene().getWindow();
 		if (this.isSquare) {
-			win.setWidth(field.getColumnCount() * CellView.CELL_HEIGHT_AND_WIDTH);
-			win.setHeight(
-					field.getRowCount() * CellView.CELL_HEIGHT_AND_WIDTH + this.maxSquareMineFieldSize.headerHeight());
 			boardPane = new SquareMineFieldPanel(field, this);
 		} else {
-			win.setWidth(field.getColumnCount() * HexCellView.CELL_HEIGHT_AND_WIDTH * 1.5);
-			win.setHeight(field.getRowCount() * HexCellView.CELL_HEIGHT_AND_WIDTH / 2
-					+ HexCellView.CELL_HEIGHT_AND_WIDTH + this.maxHexMineFieldSize.headerHeight());
 			boardPane = new HexMineFieldPanel(field, this);
 		}
-		win.centerOnScreen();
 		this.contentPane.getChildren().clear();
 		this.contentPane.getChildren().add(boardPane);
 	}
