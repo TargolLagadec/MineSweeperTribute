@@ -35,6 +35,7 @@ public class MinerJavaFxApplication extends Application {
 		stage.setTitle(Messages.getString("MainWindow.title")); //$NON-NLS-1$
 		stage.setScene(new Scene(root));
 		ThemesManager.getInstance().setTheme(root.getScene());
+		stage.centerOnScreen();
 		stage.show();
 	}
 
