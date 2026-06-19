@@ -81,10 +81,13 @@ public class MainWindowController implements IMineFieldListener {
 		loadWelcomeView();
 		// loadTestView();
 		this.scrollPane.setOnScroll(event -> {
-			if (!event.isControlDown()) {
+			double deltaY = event.getDeltaY();
+			if (Math.abs(deltaY) < 0.01) {
 				return;
 			}
-			final double zoomFactor = event.getDeltaY() > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
+			int direction = deltaY > 0 ? 1 : -1;
+
+			final double zoomFactor = direction > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
 			final Bounds viewportBounds = this.scrollPane.getViewportBounds();
 			final Bounds contentBounds = this.contentPane.getBoundsInParent();
 			final double valX = this.scrollPane.getHvalue();
