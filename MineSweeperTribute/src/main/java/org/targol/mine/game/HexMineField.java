@@ -3,8 +3,8 @@ package org.targol.mine.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.targol.mine.game.enums.CellDisplayState;
 import org.targol.mine.game.enums.Difficulty;
+import org.targol.mine.ui.components.CellDisplayState;
 
 public class HexMineField extends AbstractMineField {
 

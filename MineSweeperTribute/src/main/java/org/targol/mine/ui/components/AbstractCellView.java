@@ -1,53 +1,52 @@
 package org.targol.mine.ui.components;
 
 import org.targol.mine.game.Cell;
-import org.targol.mine.game.enums.CellDisplayState;
 
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 
-public abstract class AbstractCellView extends StackPane {
+public abstract class AbstractCellView extends Canvas {
 
 	private final Cell cell;
 	private final int row;
 	private final int column;
-	private final Label label = new Label();
 	private CellDisplayState previousDisplay;
+	protected GraphicsContext gc;
 
 	public AbstractCellView(final Cell cell, final int row, final int column) {
 		super();
 		this.cell = cell;
 		this.row = row;
 		this.column = column;
-		getChildren().add(this.label);
-		this.label.getStyleClass().clear();
-		this.label.getStyleClass().add("cell-label"); //$NON-NLS-1$
 		final double dim = getCellDim();
-		setMinSize(dim, dim);
-		setPrefSize(dim, dim);
-		setMaxSize(dim, dim);
+		setWidth(dim);
+		setHeight(dim);
+		this.gc = getGraphicsContext2D();
+		refresh();
 	}
 
 	protected abstract double getCellDim();
 
+	protected abstract void drawCell(final CellDisplayState state);
+
 	public void refresh() {
 		if (!this.cell.isRevealed()) {
 			if (this.cell.isFlagged()) {
-				updateStyle(CellDisplayState.FLAGGED);
+				updateCell(CellDisplayState.FLAGGED);
 				return;
 			}
-			updateStyle(CellDisplayState.HIDDEN);
+			updateCell(CellDisplayState.HIDDEN);
 			return;
 		}
 		if (this.cell.isMine()) {
-			updateStyle(CellDisplayState.MINE);
+			updateCell(CellDisplayState.MINE);
 			return;
 		}
 		if (this.cell.getAdjacentMineCount() == 0) {
-			updateStyle(CellDisplayState.EMPTY);
+			updateCell(CellDisplayState.EMPTY);
 		} else {
 			final String stateValue = "NUMBER_".concat(Integer.toString(this.cell.getAdjacentMineCount()));
-			updateStyle(CellDisplayState.valueOf(stateValue));
+			updateCell(CellDisplayState.valueOf(stateValue));
 		}
 
 	}
@@ -60,16 +59,11 @@ public abstract class AbstractCellView extends StackPane {
 		return this.column;
 	}
 
-	private void updateStyle(final CellDisplayState state) {
+	private void updateCell(final CellDisplayState state) {
 		if (state.equals(this.previousDisplay)) {
 			return;
 		}
-		if (this.previousDisplay != null) {
-			getStyleClass().remove(this.previousDisplay.getCssClass());
-		}
-		getStyleClass().add(state.getCssClass());
-		this.label.setText(state.getLabel());
-
 		this.previousDisplay = state;
+		drawCell(state);
 	}
 }

@@ -86,7 +86,7 @@ public class NewGameDialog extends Dialog<AbstractMineField> {
 
 	private void setMaxDimensions() {
 		final PreferencesManager pref = PreferencesManager.getInstance();
-		this.nbCols.setMax(200);
+		this.nbCols.setMax(100);
 		this.nbCols.setMajorTickUnit(10);
 		this.nbCols.setShowTickMarks(true);
 		this.nbCols.setShowTickLabels(true);
@@ -94,7 +94,7 @@ public class NewGameDialog extends Dialog<AbstractMineField> {
 		if (lastChoosenCols >= this.nbCols.getMin() && lastChoosenCols <= this.nbCols.getMax()) {
 			this.nbCols.setValue(lastChoosenCols);
 		}
-		this.nbRows.setMax(100);
+		this.nbRows.setMax(80);
 		this.nbRows.setMajorTickUnit(10);
 		this.nbRows.setShowTickMarks(true);
 		this.nbRows.setShowTickLabels(true);

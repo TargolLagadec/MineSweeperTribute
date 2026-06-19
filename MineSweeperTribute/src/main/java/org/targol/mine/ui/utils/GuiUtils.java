@@ -35,11 +35,9 @@ public class GuiUtils {
 	 * @param title        dialog title
 	 * @param msg          dialog content text
 	 * @param initialValue initial content of input. can be <code>null</code>
-	 * @param regExp       if no <code>null</code>, limits allowed chars in input
-	 *                     TextField.<br>
-	 *                     for example, if set to "<code>[A-Z0-9_]*</code>", it will
-	 *                     limit input to Upper case letters, numeral digits ans
-	 *                     underscore char ("_").
+	 * @param regExp       if no <code>null</code>, limits allowed chars in input TextField.<br>
+	 *                     for example, if set to "<code>[A-Z0-9_]*</code>", it will limit input to Upper case letters,
+	 *                     numeral digits ans underscore char ("_").
 	 * @return an optional that content entered text if any.
 	 */
 	public static Optional<String> getTextFromInputDialog(final String title, final String msg,
@@ -54,7 +52,6 @@ public class GuiUtils {
 		prompt.setTitle(title);
 		prompt.setContentText(msg);
 		ThemesManager.getInstance().setTheme(prompt.getDialogPane());
-//		prompt.getDialogPane().getStylesheets().add(GuiUtils.class.getResource("/style/style.css").toExternalForm());
 		if (regExp != null) {
 			final TextField textField = prompt.getEditor();
 			textField.setTextFormatter(new TextFormatter<String>(change -> {
