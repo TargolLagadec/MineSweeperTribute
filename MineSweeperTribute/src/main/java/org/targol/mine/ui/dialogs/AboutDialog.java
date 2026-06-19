@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.targol.mine.MineSweeperTributeApplication;
+import org.targol.mine.MinerJavaFxApplication;
 import org.targol.mine.i18n.Messages;
 
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Window;
@@ -24,6 +26,8 @@ public class AboutDialog extends Dialog<Void> {
 	private ButtonType okButtonType;
 	@FXML
 	private Label appTitle;
+	@FXML
+	private Hyperlink linkToGithub;
 
 	private final ResourceBundle bundle = ResourceBundle.getBundle("i18n.messages", Locale.getDefault()); //$NON-NLS-1$
 
@@ -40,6 +44,9 @@ public class AboutDialog extends Dialog<Void> {
 			final DialogPane dialogPane = loader.load();
 			setDialogPane(dialogPane);
 			this.appTitle.setText(Messages.getString("AboutDialog.text", MineSweeperTributeApplication.APP_VERSION)); //$NON-NLS-1$
+			this.linkToGithub.setOnAction(event -> {
+				MinerJavaFxApplication.runningApp.getHostServices().showDocument(this.linkToGithub.getText());
+			});
 			final Button okButton = (Button) dialogPane.lookupButton(this.okButtonType);
 			okButton.addEventFilter(ActionEvent.ACTION, this::onBtnOkClick);
 		} catch (final IOException e) {

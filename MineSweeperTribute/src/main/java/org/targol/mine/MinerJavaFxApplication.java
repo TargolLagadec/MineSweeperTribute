@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 public class MinerJavaFxApplication extends Application {
 
 	private ConfigurableApplicationContext context;
-	private Stage mainWindow;
+	public static MinerJavaFxApplication runningApp;;
 	final ResourceBundle bundle = ResourceBundle.getBundle("i18n.messages", Locale.getDefault()); //$NON-NLS-1$
 
 	@Override
@@ -28,7 +28,7 @@ public class MinerJavaFxApplication extends Application {
 
 	@Override
 	public void start(final Stage stage) throws Exception {
-		this.mainWindow = stage;
+		runningApp = this;
 		final FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/MainWindow.fxml"), this.bundle); //$NON-NLS-1$
 		loader.setControllerFactory(this.context::getBean);
 		final Parent root = loader.load();

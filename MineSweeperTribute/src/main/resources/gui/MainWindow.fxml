@@ -23,7 +23,7 @@
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#newGame" text="%MainWindow.mnu_game.itm_new" />
 						<SeparatorMenuItem mnemonicParsing="false" />
-                  <Menu mnemonicParsing="false" text="%MainWindow.mnu_game.itm_prefs">
+                  <Menu mnemonicParsing="false" text="%MainWindow.mnu_game.itm_theme">
                     <items>
                         <CheckMenuItem fx:id="mnuitm_them_dark" mnemonicParsing="false" text="Unspecified Action" />
                         <CheckMenuItem fx:id="mnuitm_them_grey" mnemonicParsing="false" text="Unspecified Action" />
