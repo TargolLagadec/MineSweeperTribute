@@ -41,7 +41,7 @@ public class PreferencesManager {
 		if (theme != null) {
 			return Theme.valueOf(theme);
 		}
-		return null;
+		return Theme.GREY;
 	}
 
 	public void setCurrentTheme(final Theme theme) {

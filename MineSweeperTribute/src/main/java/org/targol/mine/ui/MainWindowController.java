@@ -9,13 +9,16 @@ import org.targol.mine.game.AbstractMineField;
 import org.targol.mine.game.IMineFieldListener;
 import org.targol.mine.game.SquareMineField;
 import org.targol.mine.i18n.Messages;
+import org.targol.mine.ui.dialogs.AboutDialog;
 import org.targol.mine.ui.dialogs.GameResultDialog;
 import org.targol.mine.ui.dialogs.NewGameDialog;
-import org.targol.mine.ui.dialogs.PreferencesDialog;
 import org.targol.mine.ui.panels.HexMineFieldPanel;
 import org.targol.mine.ui.panels.SquareMineFieldPanel;
 import org.targol.mine.ui.panels.TestPanel;
 import org.targol.mine.ui.panels.WelcomePanelController;
+import org.targol.mine.utils.PreferencesManager;
+import org.targol.mine.utils.ThemesManager;
+import org.targol.mine.utils.ThemesManager.Theme;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -23,11 +26,13 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -40,6 +45,14 @@ public class MainWindowController implements IMineFieldListener {
 
 	@FXML
 	private MenuItem mnuClose;
+	@FXML
+	private CheckMenuItem mnuitm_them_dark;
+	@FXML
+	private CheckMenuItem mnuitm_them_grey;
+	@FXML
+	private CheckMenuItem mnuitm_them_sunny;
+	@FXML
+	private CheckMenuItem mnuitm_them_iceberg;
 	@FXML
 	private ScrollPane scrollPane;
 	@FXML
@@ -64,6 +77,7 @@ public class MainWindowController implements IMineFieldListener {
 
 	@FXML
 	private void initialize() {
+		initializeThemesSubMenu();
 		loadWelcomeView();
 		// loadTestView();
 		this.scrollPane.setOnScroll(event -> {
@@ -98,14 +112,54 @@ public class MainWindowController implements IMineFieldListener {
 	}
 
 	@FXML
-	private void showPrefs() {
-		final PreferencesDialog dialog = new PreferencesDialog(this.contentPane.getScene().getWindow());
+	private void showAbout() {
+		final AboutDialog dialog = new AboutDialog(this.contentPane.getScene().getWindow());
 		dialog.showAndWait();
 	}
 
 	@FXML
 	private void quit() {
 		Platform.exit();
+	}
+
+	private void initializeThemesSubMenu() {
+		this.mnuitm_them_dark.setText("Dark");
+		this.mnuitm_them_dark.setUserData(Theme.DARK);
+		this.mnuitm_them_dark.setOnAction(event -> {
+			changeTheme(event);
+		});
+		this.mnuitm_them_grey.setText("Grey");
+		this.mnuitm_them_grey.setUserData(Theme.GREY);
+		this.mnuitm_them_grey.setOnAction(event -> {
+			changeTheme(event);
+		});
+		this.mnuitm_them_sunny.setText("Sunny");
+		this.mnuitm_them_sunny.setUserData(Theme.SUNNY);
+		this.mnuitm_them_sunny.setOnAction(event -> {
+			changeTheme(event);
+		});
+		this.mnuitm_them_iceberg.setText("Iceberg");
+		this.mnuitm_them_iceberg.setUserData(Theme.ICEBERG);
+		this.mnuitm_them_iceberg.setOnAction(event -> {
+			changeTheme(event);
+		});
+		updateThemesMenus();
+	}
+
+	private void changeTheme(ActionEvent event) {
+		Theme newTheme = (Theme) ((CheckMenuItem) event.getSource()).getUserData();
+		final ThemesManager tm = ThemesManager.getInstance();
+		PreferencesManager.getInstance().setCurrentTheme(newTheme);
+		tm.setTheme(this.contentPane.getScene());
+		updateThemesMenus();
+	}
+
+	private void updateThemesMenus() {
+		Theme curTheme = PreferencesManager.getInstance().getCurrentTheme();
+		this.mnuitm_them_dark.setSelected(Theme.DARK.equals(curTheme));
+		this.mnuitm_them_grey.setSelected(Theme.GREY.equals(curTheme));
+		this.mnuitm_them_sunny.setSelected(Theme.SUNNY.equals(curTheme));
+		this.mnuitm_them_iceberg.setSelected(Theme.ICEBERG.equals(curTheme));
 	}
 
 	private void displayMineField(final AbstractMineField field) {

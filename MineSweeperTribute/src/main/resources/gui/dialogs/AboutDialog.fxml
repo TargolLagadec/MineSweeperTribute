@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane prefHeight="200" prefWidth="500"
+	stylesheets="@../../style/style.css"
+	xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+
+	<buttonTypes>
+		<ButtonType fx:id="okButtonType" buttonData="OK_DONE"
+			text="%Generic.dialog.Ok" />
+	</buttonTypes>
+	<content>
+		<VBox alignment="TOP_CENTER">
+			<Label alignment="CENTER" contentDisplay="CENTER"
+				fx:id="appTitle" textAlignment="CENTER">
+				<font>
+					<Font name="System Bold" size="24.0" />
+				</font>
+			</Label>
+			<Label alignment="CENTER" contentDisplay="CENTER"
+				text="%AboutDialog.credentials" textAlignment="CENTER">
+				<font>
+					<Font size="20.0" />
+				</font>
+			</Label>
+			<Label alignment="CENTER" contentDisplay="CENTER"
+				text="%AboutDialog.Licence" textAlignment="CENTER">
+				<font>
+					<Font size="20.0" />
+				</font>
+			</Label>
+		</VBox>
+	</content>
+
+</DialogPane>

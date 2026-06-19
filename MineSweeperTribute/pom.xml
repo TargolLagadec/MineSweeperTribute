@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.targol</groupId>
 	<artifactId>mine</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>MineSweeperTribute</name>
 	<description>Old window game Mine sweeper tribute</description>
 	<url />

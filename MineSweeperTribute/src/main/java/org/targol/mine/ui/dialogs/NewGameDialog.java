@@ -94,7 +94,7 @@ public class NewGameDialog extends Dialog<AbstractMineField> {
 		if (lastChoosenCols >= this.nbCols.getMin() && lastChoosenCols <= this.nbCols.getMax()) {
 			this.nbCols.setValue(lastChoosenCols);
 		}
-		this.nbRows.setMax(80);
+		this.nbRows.setMax(60);
 		this.nbRows.setMajorTickUnit(10);
 		this.nbRows.setShowTickMarks(true);
 		this.nbRows.setShowTickLabels(true);
